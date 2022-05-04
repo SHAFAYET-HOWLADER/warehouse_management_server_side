@@ -8,21 +8,17 @@ app.use(express.json())
 app.get('/', (req,res)=>{
   res.send('Node.js is running');
 })
-
-app.get('/hello', (req,res)=>{
-  res.send('hello world')
-})
-
 //user = depositBook
 //pass = Lef9ilzU8WbkWLFg
 
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId} = require('mongodb');
 const uri = `mongodb+srv://${process.env.BOOKS_USER}:${process.env.BOOKS_PASS}@cluster0.h0m8b.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 async function run(){
   try{
    await client.connect();
    const booksCollection = client.db('booksReader').collection('books');
+
    //get multiple data from db
    app.get('/inventory', async (req, res)=>{
      const query = {};
