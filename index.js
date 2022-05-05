@@ -8,6 +8,7 @@ app.use(express.json())
 app.get('/', (req,res)=>{
   res.send('Node.js is running');
 })
+
 //user = depositBook
 //pass = Lef9ilzU8WbkWLFg
 
@@ -18,7 +19,36 @@ async function run(){
   try{
    await client.connect();
    const booksCollection = client.db('booksReader').collection('books');
-
+   //add books
+   app.put('/book/:id', async (req,res)=>{
+     const id = req.params.id;
+     const quantity = req.body;
+     console.log(quantity)
+     const filter = {_id: ObjectId(id)};
+     const options = {upsert: true};
+     const updatedDoc = {
+       $set:{
+         quantity: quantity.newQuantity
+       },
+     };
+     const result  = await booksCollection.updateOne(filter,updatedDoc,options);
+     res.send(result);
+   });
+   // reduce quantity
+   app.put('/inventory/:id', async (req,res)=>{
+     const id = req.params.id;
+     const user = req.body;
+     const deliver = user.quantity-1;
+     const filter = {_id: ObjectId(id)}
+     const options = {upsert: true};
+     const updateDoc = {
+       $set : {
+         quantity : deliver
+       }
+     }
+     const result = await booksCollection.updateOne(filter, updateDoc, options);
+     res.send(result);
+   })
    //get multiple data from db
    app.get('/inventory', async (req, res)=>{
      const query = {};
@@ -33,6 +63,19 @@ async function run(){
       const book = await booksCollection.findOne(query);
       res.send(book);
    })
+   //post data
+    app.post('/inventory', async (req,res)=>{
+      const book = req.body;
+      const result = await booksCollection.insertOne(book);
+      res.send(result);
+    })
+    //delete book
+    app.delete('/inventory/:id', async (req,res)=>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)};
+      const result = await booksCollection.deleteOne(query);
+      res.send(result);
+    })
   }
   finally{
     
@@ -43,3 +86,4 @@ run().catch(console.dir);
 app.listen(port, ()=>{
   console.log('Crud server is running');
 })
+
