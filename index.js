@@ -19,7 +19,7 @@ async function run(){
   try{
    await client.connect();
    const booksCollection = client.db('booksReader').collection('books');
-   //add books
+   //------------------add books--------------------->
    app.put('/book/:id', async (req,res)=>{
      const id = req.params.id;
      const quantity = req.body;
@@ -34,7 +34,7 @@ async function run(){
      const result  = await booksCollection.updateOne(filter,updatedDoc,options);
      res.send(result);
    });
-   // reduce quantity
+   //---------------reduce quantity-------------->
    app.put('/inventory/:id', async (req,res)=>{
      const id = req.params.id;
      const user = req.body;
@@ -49,27 +49,27 @@ async function run(){
      const result = await booksCollection.updateOne(filter, updateDoc, options);
      res.send(result);
    })
-   //get multiple data from db
+   //-------------get multiple data from db------------->
    app.get('/inventory', async (req, res)=>{
      const query = {};
      const cursor = booksCollection.find(query);
      const books = await cursor.toArray();
      res.send(books);
    })
-   //get single data from db
+   //----------------get single data from db-------------->
    app.get('/inventory/:id', async (req,res)=>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)};
       const book = await booksCollection.findOne(query);
       res.send(book);
    })
-   //post data
-    app.post('/inventory', async (req,res)=>{
+   //-------------------post data-------------------->
+    app.post('/allBooks', async (req,res)=>{
       const book = req.body;
       const result = await booksCollection.insertOne(book);
       res.send(result);
     })
-    //delete book
+    //<--------------delete book------------------->
     app.delete('/inventory/:id', async (req,res)=>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)};
