@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = process.env.port || 5000;
+const port = process.env.PORT || 5000;
 const cors = require('cors')
 require('dotenv').config()
 app.use(cors())
@@ -145,5 +145,5 @@ async function run() {
 }
 run().catch(console.dir);
 app.listen(port, () => {
-  console.log('Crud server is running');
+  console.log('Crud server is running', port);
 })
