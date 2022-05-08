@@ -19,6 +19,9 @@ async function run() {
     const booksCollection = client.db('booksReader').collection('books');
     const myBooksCollection = client.db('booksReader').collection('myBooks');
     //------------------add books start--------------------->
+    app.get('/hero', (req,res)=>{
+      res.send("heroku deploy");
+    })
     app.put('/book/:id', async (req, res) => {
       const id = req.params.id;
       const quantity = req.body;
